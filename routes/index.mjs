@@ -44,7 +44,16 @@ router.post("/upload", async (req, res) => {
   try {
     // Uninstall plugins if flag is set
     if (uninstallPluginsFlag) {
-      await uninstallPlugins(jiraHost, jiraUsername, jiraPassword);
+      const uninstallSuccess = await uninstallPlugins(
+        jiraHost,
+        jiraUsername,
+        jiraPassword
+      );
+      if (!uninstallSuccess) {
+        return res
+          .status(500)
+          .json({ message: "Failed to uninstall one or more plugins" });
+      }
     }
 
     // Initialize Selenium WebDriver
