@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jira OBR Uploader</title>
+  </head>
+  <body>
+    <h1>Upload OBR Files to Jira</h1>
+    <form id="upload-form" enctype="multipart/form-data">
+      <label for="jira-host">Jira Host:</label>
+      <input
+        type="text"
+        id="jira-host"
+        name="jiraHost"
+        placeholder="http://localhost:2990/jira"
+        required
+      />
+      <br />
+      <label for="jira-username">Username:</label>
+      <input type="text" id="jira-username" name="jiraUsername" required />
+      <br />
+      <label for="jira-password">Password:</label>
+      <input type="password" id="jira-password" name="jiraPassword" required />
+      <br />
+      <label for="obr-files">Select OBR Files:</label>
+      <input type="file" id="obr-files" name="obrFiles" multiple required />
+      <br />
+      <button type="submit">Upload</button>
+    </form>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // Load stored credentials
+        const jiraHost = localStorage.getItem("jiraHost");
+        const jiraUsername = localStorage.getItem("jiraUsername");
+        const jiraPassword = localStorage.getItem("jiraPassword");
+
+        if (jiraHost) document.getElementById("jira-host").value = jiraHost;
+        if (jiraUsername)
+          document.getElementById("jira-username").value = jiraUsername;
+        if (jiraPassword)
+          document.getElementById("jira-password").value = jiraPassword;
+      });
+
+      document
+        .getElementById("upload-form")
+        .addEventListener("submit", async (event) => {
+          event.preventDefault();
+          const jiraHost = document.getElementById("jira-host").value;
+          const jiraUsername = document.getElementById("jira-username").value;
+          const jiraPassword = document.getElementById("jira-password").value;
+
+          // Save credentials to localStorage
+          localStorage.setItem("jiraHost", jiraHost);
+          localStorage.setItem("jiraUsername", jiraUsername);
+          localStorage.setItem("jiraPassword", jiraPassword);
+
+          const formData = new FormData();
+          formData.append("jiraHost", jiraHost);
+          formData.append("jiraUsername", jiraUsername);
+          formData.append("jiraPassword", jiraPassword);
+
+          const files = document.getElementById("obr-files").files;
+          for (const file of files) {
+            formData.append("obrFiles", file);
+          }
+
+          const response = await fetch("/upload", {
+            method: "POST",
+            body: formData,
+          });
+
+          const result = await response.json();
+          console.log(result);
+        });
+    </script>
+  </body>
+</html>
