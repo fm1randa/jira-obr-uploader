@@ -13,6 +13,7 @@ import { Builder, By, until } from "selenium-webdriver";
 import Chrome from "selenium-webdriver/chrome.js";
 import WebSocket, { WebSocketServer } from "ws";
 import http from "http";
+import fs from "fs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -21,6 +22,9 @@ const app = express();
 const port = process.argv[2] || 80;
 
 const dest = path.join(process.cwd(), "/uploads");
+const driverOptions = JSON.parse(
+  fs.readFileSync(path.join(process.cwd(), "options.json"), "utf8")
+);
 
 console.log(`Set file upload destination to ${dest}`);
 
@@ -101,7 +105,21 @@ app.post("/upload", upload.array("obrFiles"), async (req, res) => {
     sendWsMessage(clientId, "Opening Jira UPM...", "info");
     // Initialize Selenium WebDriver
     const options = new Chrome.Options();
-    options.addArguments("--headless", "--disable-gpu", "--no-sandbox");
+    if (driverOptions.headless) {
+      console.log("Running in headless mode");
+      sendWsMessage(clientId, "Running in headless mode", "debug");
+      options.addArguments("--headless");
+    }
+    if (driverOptions.disableGpu) {
+      console.log("Disabling GPU");
+      sendWsMessage(clientId, "Disabling GPU", "debug");
+      options.addArguments("--disable-gpu");
+    }
+    if (driverOptions.noSandbox) {
+      console.log("Disabling sandbox");
+      sendWsMessage(clientId, "Disabling sandbox", "debug");
+      options.addArguments("--no-sandbox");
+    }
     driver = await new Builder()
       .forBrowser("chrome")
       .setChromeOptions(options)

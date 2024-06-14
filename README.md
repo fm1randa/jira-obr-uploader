@@ -34,6 +34,35 @@ Start the server
 npm start
 ```
 
+## Usage
+
+### Changing port
+
+```bash
+npm start 8080
+# Server is running on http://localhost:8080
+```
+
+### Changing driver options
+
+Avaliable options:
+
+- `headless` (boolean)
+- `disableGpu` (boolean)
+- `noSandbox` (boolean)
+
+Create a `options.json` file at the project root
+
+```json
+{
+  "headless": true,
+  "disableGpu": true,
+  "noSandbox": true
+}
+```
+
+:bulb: The setup above is useful to hide the Chrome window.
+
 ## Screenshots
 
 ![image](https://github.com/fm1randa/jira-obr-uploader/assets/35941797/7f89f6d8-b8e6-421b-b7cd-9f8a4af2daa1)
