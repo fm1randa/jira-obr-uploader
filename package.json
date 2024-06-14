@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "node server.mjs",
+    "start": "node api/index.mjs",
     "lint": "eslint .",
     "lint:fix": "eslint --fix ."
   },

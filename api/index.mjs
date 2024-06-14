@@ -2,12 +2,12 @@ import express from "express";
 import multer from "multer";
 import path from "path";
 import { fileURLToPath } from "url";
-import { deleteFiles } from "./helpers/fileHelpers.mjs";
-import { uninstallPlugins } from "./helpers/jiraHelpers.mjs";
+import { deleteFiles } from "../helpers/fileHelpers.mjs";
+import { uninstallPlugins } from "../helpers/jiraHelpers.mjs";
 import {
   visitUrlWithRedirectHandling,
   waitForElementToBeInteractable,
-} from "./helpers/seleniumHelpers.mjs";
+} from "../helpers/seleniumHelpers.mjs";
 import { Builder, By, until } from "selenium-webdriver";
 import WebSocket, { WebSocketServer } from "ws";
 import http from "http";
@@ -35,7 +35,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 // Serve static files from the public directory
-app.use(express.static(path.join(__dirname, "public")));
+console.log(path.join(process.cwd(), "public"));
+app.use(express.static(path.join(process.cwd(), "public")));
 
 // Handle file uploads
 app.post("/upload", upload.array("obrFiles"), async (req, res) => {

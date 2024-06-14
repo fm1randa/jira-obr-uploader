@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
 const messagesDiv = document.getElementById("messages");
 const uploadButton = document.querySelector('button[type="submit"]');
 
-const ws = new WebSocket("ws://localhost:80");
+const ws = new WebSocket(`ws://${new URL(window.location.href).host}`);
 
 let clientId;
 
