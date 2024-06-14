@@ -22,9 +22,17 @@ const app = express();
 const port = process.argv[2] || 80;
 
 const dest = path.join(process.cwd(), "/uploads");
-const driverOptions = JSON.parse(
-  fs.readFileSync(path.join(process.cwd(), "options.json"), "utf8")
-);
+let driverOptions;
+
+try {
+  driverOptions = JSON.parse(
+    fs.readFileSync(path.join(process.cwd(), "options.json"), "utf8")
+  );
+  console.log("Loaded options file:", driverOptions);
+} catch (error) {
+  console.error("Error reading options file:", error);
+  driverOptions = {};
+}
 
 console.log(`Set file upload destination to ${dest}`);
 
