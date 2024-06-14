@@ -98,9 +98,27 @@ async function waitForElementToBeInteractable(
   }
 }
 
+async function safeWaitForElementToBeInteractable(
+  driver,
+  element,
+  waitTime = 30000
+) {
+  try {
+    await driver.wait(async function () {
+      const isEnabled = await element.isEnabled();
+      const isDisplayed = await element.isDisplayed();
+      return isEnabled && isDisplayed;
+    }, waitTime);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export {
   handleWebSudo,
   waitForNavigationToUrl,
   visitUrlWithRedirectHandling,
   waitForElementToBeInteractable,
+  safeWaitForElementToBeInteractable,
 };

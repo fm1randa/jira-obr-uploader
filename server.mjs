@@ -5,6 +5,7 @@ import { fileURLToPath } from "url";
 import { deleteFiles } from "./helpers/fileHelpers.mjs";
 import { uninstallPlugins } from "./helpers/jiraHelpers.mjs";
 import {
+  safeWaitForElementToBeInteractable,
   visitUrlWithRedirectHandling,
   waitForElementToBeInteractable,
 } from "./helpers/seleniumHelpers.mjs";
@@ -16,19 +17,17 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const port = 80;
+const port = process.argv[2] || 80;
+
+const dest = path.join(process.cwd(), "/uploads");
+
+console.log(`Set file upload destination to ${dest}`);
 
 // Set up Multer storage
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads/");
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
-  },
+const upload = multer({
+  dest,
+  preservePath: true,
 });
-
-const upload = multer({ storage });
 
 // Middleware to parse form data
 app.use(express.urlencoded({ extended: true }));
@@ -70,16 +69,20 @@ app.post("/upload", upload.array("obrFiles"), async (req, res) => {
 
   let driver;
 
-  const hostURL = new URL(jiraHost);
+  const parsedHostURL =
+    jiraHost.lastIndexOf("/") === jiraHost.length - 1
+      ? jiraHost.slice(0, -1)
+      : jiraHost;
 
   try {
     // Uninstall plugins if flag is set
     if (uninstallPluginsFlag) {
       sendWsMessage(clientId, "Uninstalling plugins...", "info");
       const uninstallSuccess = await uninstallPlugins(
-        hostURL.origin,
+        parsedHostURL,
         jiraUsername,
-        jiraPassword
+        jiraPassword,
+        (message, info) => sendWsMessage(clientId, message, info)
       );
       if (!uninstallSuccess) {
         sendWsMessage(
@@ -101,7 +104,7 @@ app.post("/upload", upload.array("obrFiles"), async (req, res) => {
     // Visit the Jira UPM page and handle redirects
     await visitUrlWithRedirectHandling(
       driver,
-      `${hostURL.origin}/plugins/servlet/upm?source=side_nav_manage_addons`,
+      `${parsedHostURL}/plugins/servlet/upm?source=side_nav_manage_addons`,
       jiraUsername,
       jiraPassword
     );
@@ -119,6 +122,19 @@ app.post("/upload", upload.array("obrFiles"), async (req, res) => {
         "debug"
       );
       await waitForElementToBeInteractable(driver, uploadButton);
+
+      // Close all aui-close-button elements to prevent blocking the upload button
+      const closeButtons = await driver.findElements(
+        By.css(".aui-close-button")
+      );
+      for (const closeButton of closeButtons) {
+        if (
+          await safeWaitForElementToBeInteractable(driver, closeButton, 1000)
+        ) {
+          await closeButton.click();
+        }
+      }
+
       await uploadButton.click();
 
       // Open the upload dialog
