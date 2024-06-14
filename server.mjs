@@ -70,12 +70,14 @@ app.post("/upload", upload.array("obrFiles"), async (req, res) => {
 
   let driver;
 
+  const hostURL = new URL(jiraHost);
+
   try {
     // Uninstall plugins if flag is set
     if (uninstallPluginsFlag) {
       sendWsMessage(clientId, "Uninstalling plugins...", "info");
       const uninstallSuccess = await uninstallPlugins(
-        jiraHost,
+        hostURL.origin,
         jiraUsername,
         jiraPassword
       );
@@ -99,7 +101,7 @@ app.post("/upload", upload.array("obrFiles"), async (req, res) => {
     // Visit the Jira UPM page and handle redirects
     await visitUrlWithRedirectHandling(
       driver,
-      `${jiraHost}/plugins/servlet/upm?source=side_nav_manage_addons`,
+      `${hostURL.origin}/plugins/servlet/upm?source=side_nav_manage_addons`,
       jiraUsername,
       jiraPassword
     );

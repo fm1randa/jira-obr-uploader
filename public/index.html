@@ -11,10 +11,11 @@
     <form id="upload-form" enctype="multipart/form-data">
       <label for="jira-host">Jira Host:</label>
       <input
-        type="text"
+        type="url"
         id="jira-host"
         name="jiraHost"
         placeholder="http://localhost:2990/jira"
+        pattern="http(s)?://.*"
         required
       />
       <br />
