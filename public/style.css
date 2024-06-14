@@ -1,0 +1,23 @@
+#connection-status {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+#messages {
+  margin-top: 20px;
+}
+.error {
+  color: red;
+}
+.success {
+  color: green;
+}
+.info {
+  color: blue;
+}
+.debug {
+  color: gray;
+}
+
+form {
+  margin-bottom: 30px;
+}

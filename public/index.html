@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./style.css" />
     <title>Jira OBR Uploader</title>
   </head>
   <body>
@@ -24,81 +25,26 @@
       <input type="password" id="jira-password" name="jiraPassword" required />
       <br />
       <label for="uninstall-plugins">Uninstall plugins before upload:</label>
-      <input type="checkbox" id="uninstall-plugins" name="uninstallPlugins" />
+      <input
+        type="checkbox"
+        id="uninstall-plugins"
+        name="uninstallPlugins"
+        checked
+      />
       <br />
       <label for="obr-files">Select OBR Files:</label>
       <input type="file" id="obr-files" name="obrFiles" multiple required />
       <br />
-      <button type="submit">Upload</button>
+      <button type="submit" disabled>Upload</button>
     </form>
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        // Load stored credentials
-        const jiraHost = localStorage.getItem("jiraHost");
-        const jiraUsername = localStorage.getItem("jiraUsername");
-        const jiraPassword = localStorage.getItem("jiraPassword");
-
-        if (jiraHost) document.getElementById("jira-host").value = jiraHost;
-        if (jiraUsername)
-          document.getElementById("jira-username").value = jiraUsername;
-        if (jiraPassword)
-          document.getElementById("jira-password").value = jiraPassword;
-
-        console.log("Loaded credentials from localStorage:", {
-          jiraHost,
-          jiraUsername,
-          jiraPassword,
-        });
-      });
-
-      document
-        .getElementById("upload-form")
-        .addEventListener("submit", async (event) => {
-          event.preventDefault();
-          const jiraHost = document.getElementById("jira-host").value;
-          const jiraUsername = document.getElementById("jira-username").value;
-          const jiraPassword = document.getElementById("jira-password").value;
-          const uninstallPlugins =
-            document.getElementById("uninstall-plugins").checked;
-
-          console.log("Submitting form with credentials:", {
-            jiraHost,
-            jiraUsername,
-            jiraPassword,
-            uninstallPlugins,
-          });
-
-          // Save credentials to localStorage
-          localStorage.setItem("jiraHost", jiraHost);
-          localStorage.setItem("jiraUsername", jiraUsername);
-          localStorage.setItem("jiraPassword", jiraPassword);
-
-          console.log("Credentials saved to localStorage");
-
-          const formData = new FormData();
-          formData.append("jiraHost", jiraHost);
-          formData.append("jiraUsername", jiraUsername);
-          formData.append("jiraPassword", jiraPassword);
-          formData.append("uninstallPlugins", uninstallPlugins);
-
-          const files = document.getElementById("obr-files").files;
-          for (const file of files) {
-            formData.append("obrFiles", file);
-            console.log("Appending file to formData:", file.name);
-          }
-
-          try {
-            const response = await fetch("/upload", {
-              method: "POST",
-              body: formData,
-            });
-
-            const result = await response.json();
-            console.log("Server response:", result);
-          } catch (error) {
-            console.error("Error during file upload:", error);
-          }
-        });
-    </script>
+    <label>
+      Log Level:
+      <select id="log-level">
+        <option value="normal">Normal</option>
+        <option value="debug">Debug</option>
+      </select>
+    </label>
+    <div id="messages"></div>
+    <script src="./index.js"></script>
   </body>
 </html>

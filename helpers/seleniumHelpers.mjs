@@ -22,7 +22,7 @@ async function waitForNavigationToUrl(
     try {
       await driver.wait(until.urlIs(url), waitTime);
       return;
-    } catch (error) {
+    } catch {
       retries++;
       console.log(
         `Retrying to visit the intended URL (${retries}/${maxRetries})`
