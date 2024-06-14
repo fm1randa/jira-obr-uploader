@@ -159,6 +159,7 @@ app.post("/upload", upload.array("obrFiles"), async (req, res) => {
       await waitForElementToBeInteractable(driver, uploadButton);
 
       // Close all aui-close-button elements to prevent blocking the upload button
+      sendWsMessage(clientId, "Closing all open dialogs...", "debug");
       const closeButtons = await driver.findElements(
         By.css(".aui-close-button")
       );
