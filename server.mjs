@@ -14,9 +14,6 @@ import Chrome from "selenium-webdriver/chrome.js";
 import WebSocket, { WebSocketServer } from "ws";
 import http from "http";
 import fs from "fs";
-import { checkForUpdates } from "./helpers/gitHelpers.mjs";
-
-await checkForUpdates();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

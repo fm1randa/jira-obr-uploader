@@ -50,4 +50,4 @@ async function checkForUpdates() {
   }
 }
 
-export { checkForUpdates };
+await checkForUpdates();
