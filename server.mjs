@@ -29,8 +29,8 @@ try {
     fs.readFileSync(path.join(process.cwd(), "options.json"), "utf8")
   );
   console.log("Loaded options file:", driverOptions);
-} catch (error) {
-  console.error("Error reading options file:", error);
+} catch {
+  console.warning("Could not find options file, using default options");
   driverOptions = {};
 }
 
