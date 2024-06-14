@@ -10,6 +10,7 @@ import {
   waitForElementToBeInteractable,
 } from "./helpers/seleniumHelpers.mjs";
 import { Builder, By, until } from "selenium-webdriver";
+import Chrome from "selenium-webdriver/chrome.js";
 import WebSocket, { WebSocketServer } from "ws";
 import http from "http";
 
@@ -99,7 +100,12 @@ app.post("/upload", upload.array("obrFiles"), async (req, res) => {
 
     sendWsMessage(clientId, "Opening Jira UPM...", "info");
     // Initialize Selenium WebDriver
-    driver = await new Builder().forBrowser("chrome").build();
+    const options = new Chrome.Options();
+    options.addArguments("--headless", "--disable-gpu", "--no-sandbox");
+    driver = await new Builder()
+      .forBrowser("chrome")
+      .setChromeOptions(options)
+      .build();
 
     // Visit the Jira UPM page and handle redirects
     await visitUrlWithRedirectHandling(
