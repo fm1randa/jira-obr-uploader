@@ -16,6 +16,12 @@ Go to the project directory
 cd jira-obr-uploader
 ```
 
+Switch to the Node version specified in the `.nvmrc` file
+
+```bash
+nvm install
+```
+
 Install dependencies
 
 ```bash
@@ -29,4 +35,5 @@ npm start
 ```
 
 ## Screenshots
+
 ![image](https://github.com/fm1randa/jira-obr-uploader/assets/35941797/7f89f6d8-b8e6-421b-b7cd-9f8a4af2daa1)
