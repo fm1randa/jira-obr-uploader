@@ -63,6 +63,6 @@ Create a `options.json` file at the project root
 
 :bulb: The setup above is useful to hide the Chrome window.
 
-## Screenshots
+## Screenshot
 
 ![image](https://github.com/fm1randa/jira-obr-uploader/assets/35941797/7f89f6d8-b8e6-421b-b7cd-9f8a4af2daa1)
