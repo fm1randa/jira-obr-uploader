@@ -30,7 +30,7 @@ try {
   );
   console.log("Loaded options file:", driverOptions);
 } catch {
-  console.warning("Could not find options file, using default options");
+  console.warn("Could not find options file, using default options");
   driverOptions = {};
 }
 
