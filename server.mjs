@@ -2,12 +2,12 @@ import express from "express";
 import multer from "multer";
 import path from "path";
 import { fileURLToPath } from "url";
-import { deleteFiles } from "../helpers/fileHelpers.mjs";
-import { uninstallPlugins } from "../helpers/jiraHelpers.mjs";
+import { deleteFiles } from "./helpers/fileHelpers.mjs";
+import { uninstallPlugins } from "./helpers/jiraHelpers.mjs";
 import {
   visitUrlWithRedirectHandling,
   waitForElementToBeInteractable,
-} from "../helpers/seleniumHelpers.mjs";
+} from "./helpers/seleniumHelpers.mjs";
 import { Builder, By, until } from "selenium-webdriver";
 import WebSocket, { WebSocketServer } from "ws";
 import http from "http";
