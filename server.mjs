@@ -89,7 +89,7 @@ app.post("/upload", upload.array("obrFiles"), async (req, res) => {
 
   try {
     // Uninstall plugins if flag is set
-    if (uninstallPluginsFlag) {
+    if (uninstallPluginsFlag === "true") {
       sendWsMessage(clientId, "Uninstalling plugins...", "info");
       const uninstallSuccess = await uninstallPlugins(
         parsedHostURL,
