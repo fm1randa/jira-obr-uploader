@@ -10,39 +10,7 @@ async function handleWebSudo(driver, jiraPassword) {
   console.log("Submitted WebSudo form");
 }
 
-// Helper function to wait for navigation to the intended URL with retries
-async function waitForNavigationToUrl(
-  driver,
-  url,
-  waitTime = 3000,
-  maxRetries = 10
-) {
-  let retries = 0;
-  while (retries < maxRetries) {
-    try {
-      await driver.wait(until.urlIs(url), waitTime);
-      return;
-    } catch {
-      retries++;
-      console.log(
-        `Retrying to visit the intended URL (${retries}/${maxRetries})`
-      );
-      await driver.get(url);
-    }
-  }
-  throw new Error(`Failed to visit URL: ${url} after ${maxRetries} retries`);
-}
-
-// Helper function to visit a URL and handle redirects
-async function visitUrlWithRedirectHandling(
-  driver,
-  url,
-  jiraUsername,
-  jiraPassword
-) {
-  await driver.get(url);
-  console.log(`Visiting URL: ${url}`);
-
+async function handleRedirects(driver, jiraUsername, jiraPassword) {
   let currentUrl = await driver.getCurrentUrl();
 
   if (currentUrl.includes("/login.jsp")) {
@@ -61,16 +29,64 @@ async function visitUrlWithRedirectHandling(
     currentUrl = await driver.getCurrentUrl();
     if (currentUrl.includes("/secure/admin/WebSudoAuthenticate!default.jspa")) {
       await handleWebSudo(driver, jiraPassword);
-      await waitForNavigationToUrl(driver, url);
+      return Promise.resolve();
     }
   } else if (
     currentUrl.includes("/secure/admin/WebSudoAuthenticate!default.jspa")
   ) {
     await handleWebSudo(driver, jiraPassword);
-    await waitForNavigationToUrl(driver, url);
+    return Promise.resolve();
   } else {
-    await waitForNavigationToUrl(driver, url);
+    return Promise.resolve();
   }
+}
+
+// Helper function to wait for navigation to the intended URL with retries
+async function waitForNavigationToUrl({
+  driver,
+  url,
+  retryFn,
+  waitTime = 3000,
+  maxRetries = 10,
+}) {
+  let retries = 0;
+  while (retries < maxRetries) {
+    try {
+      await driver.wait(until.urlIs(url), waitTime);
+      return;
+    } catch {
+      retries++;
+      console.log(
+        `Retrying to visit the intended URL (${retries}/${maxRetries})`
+      );
+      retryFn();
+    }
+  }
+  throw new Error(`Failed to visit URL: ${url} after ${maxRetries} retries`);
+}
+
+// Helper function to visit a URL and handle redirects
+async function visitUrlWithRedirectHandling(
+  driver,
+  url,
+  jiraUsername,
+  jiraPassword
+) {
+  await driver.get(url);
+  console.log(`Visiting URL: ${url}`);
+
+  let currentUrl = await driver.getCurrentUrl();
+
+  await handleRedirects(driver, jiraUsername, jiraPassword);
+
+  await waitForNavigationToUrl({
+    driver,
+    url,
+    retryFn: async () => {
+      await driver.get(url);
+      await handleRedirects(driver, jiraUsername, jiraPassword);
+    },
+  });
 
   currentUrl = await driver.getCurrentUrl();
   if (currentUrl === url) {
