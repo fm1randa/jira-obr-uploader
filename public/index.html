@@ -1,23 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./style.css" />
-    <title>Jira OBR Uploader</title>
-  </head>
-  <body>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="./style.css" />
+  <title>Jira OBR Uploader</title>
+</head>
+
+<body>
+  <header>
     <h1>Upload OBR Files to Jira</h1>
+  </header>
+  <nav>
+    <dialog>
+      <button autofocus id="modal-close">X</button>
+      <section aria-labelledby="default-plugins-heading">
+        <h3 id="default-plugins-heading">Manage Default Plugins</h3>
+        <ul class="plugin-list" id="default-plugin-list">
+          <li class="plugin-item">
+            <input type="checkbox" id="com.greffon.folio" name="budgets" checked>
+            <label for="budgets">Budgets (com.greffon.folio)</label>
+          </li>
+          <li class="plugin-item">
+            <input type="checkbox" id="com.tempoplugin.tempo-planner" name="planner" checked>
+            <label for="planner">Planner (com.tempoplugin.tempo-planner)</label>
+          </li>
+          <li class="plugin-item">
+            <input type="checkbox" id="is.origo.jira.tempo-plugin" name="timesheets" checked>
+            <label for="timesheets">Timesheets (is.origo.jira.tempo-plugin)</label>
+          </li>
+          <li class="plugin-item">
+            <input type="checkbox" id="com.tempoplugin.tempo-teams" name="teams" checked>
+            <label for="teams">Teams (com.tempoplugin.tempo-teams)</label>
+          </li>
+          <li class="plugin-item">
+            <input type="checkbox" id="com.tempoplugin.tempo-platform-api" name="platform-api" checked>
+            <label for="platform-api">Platform API (com.tempoplugin.tempo-platform-api)</label>
+          </li>
+          <li class="plugin-item">
+            <input type="checkbox" id="com.tempoplugin.tempo-platform-jira" name="platform-jira" checked>
+            <label for="platform-jira">Platform Jira (com.tempoplugin.tempo-platform-jira)</label>
+          </li>
+          <li class="plugin-item">
+            <input type="checkbox" id="com.tempoplugin.tempo-plan-core" name="plan-core" checked>
+            <label for="plan-core">Plan Core (com.tempoplugin.tempo-plan-core)</label>
+          </li>
+          <li class="plugin-item">
+            <input type="checkbox" id="com.tempoplugin.tempo-core" name="tempo-core" checked>
+            <label for="tempo-core">Tempo Core (com.tempoplugin.tempo-core)</label>
+          </li>
+          <li class="plugin-item">
+            <input type="checkbox" id="com.tempoplugin.tempo-accounts" name="accounts" checked>
+            <label for="accounts">Accounts (com.tempoplugin.tempo-accounts)</label>
+          </li>
+        </ul>
+        <button id="modal-toggle-all-default">Toggle all</button>
+      </section>
+
+      <section aria-labelledby="custom-plugins-heading">
+        <h3 id="custom-plugins-heading">Manage Custom Plugins</h3>
+        <ul class="plugin-list" id="custom-plugin-list"></ul>
+        <div class="custom-plugin-form">
+          <input type="text" id="custom-plugin-input" placeholder="Enter plugin App key"
+            aria-label="Custom plugin name">
+          <button type="button" id="modal-add">Add</button>
+        </div>
+      </section>
+    </dialog>
+  </nav>
+  <main>
     <form id="upload-form" enctype="multipart/form-data">
       <label for="jira-host">Jira Host:</label>
-      <input
-        type="url"
-        id="jira-host"
-        name="jiraHost"
-        placeholder="http://localhost:2990/jira"
-        pattern="http(s)?://.*"
-        required
-      />
+      <input type="url" id="jira-host" name="jiraHost" placeholder="http://localhost:2990/jira" pattern="http(s)?://.*"
+        required />
       <br />
       <label for="jira-username">Username:</label>
       <input type="text" id="jira-username" name="jiraUsername" required />
@@ -26,17 +82,12 @@
       <input type="password" id="jira-password" name="jiraPassword" required />
       <br />
       <label for="uninstall-plugins">Uninstall plugins before upload:</label>
-      <input
-        type="checkbox"
-        id="uninstall-plugins"
-        name="uninstallPlugins"
-        checked
-      />
+      <button id="modal-show">Manage</button>
       <br />
       <label for="obr-files">Select OBR Files:</label>
       <input type="file" id="obr-files" name="obrFiles" multiple required />
       <br />
-      <button type="submit" disabled>Upload</button>
+      <button type="submit" disabled id="form-upload">Upload</button>
     </form>
     <label>
       Log Level:
@@ -46,6 +97,8 @@
       </select>
     </label>
     <div id="messages"></div>
-    <script src="./index.js"></script>
-  </body>
+  </main>
+  <script src="./index.js"></script>
+</body>
+
 </html>

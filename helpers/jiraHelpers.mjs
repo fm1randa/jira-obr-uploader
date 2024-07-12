@@ -1,23 +1,12 @@
 import fetch from "node-fetch";
 
-const PLUGIN_KEYS = [
-  "com.greffon.folio",
-  "com.tempoplugin.tempo-planner",
-  "is.origo.jira.tempo-plugin",
-  "com.tempoplugin.tempo-teams",
-  "com.tempoplugin.tempo-platform-api",
-  "com.tempoplugin.tempo-platform-jira",
-  "com.tempoplugin.tempo-plan-core",
-  "com.tempoplugin.tempo-core",
-  "com.tempoplugin.tempo-accounts",
-];
-
 // Helper function to uninstall plugins
 async function uninstallPlugins(
   jiraHost,
   jiraUsername,
   jiraPassword,
-  sendWsMessage
+  sendWsMessage,
+  pluginKeys
 ) {
   const url = `${jiraHost}/rest/plugins/1.0/`;
   const headers = {
@@ -29,7 +18,7 @@ async function uninstallPlugins(
 
   let allSuccess = true;
 
-  for (const pluginKey of PLUGIN_KEYS) {
+  for (const pluginKey of pluginKeys) {
     try {
       console.log(
         `Uninstalling plugin: ${pluginKey}. DELETE ${url}${pluginKey}-key`

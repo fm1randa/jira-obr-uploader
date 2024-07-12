@@ -57,8 +57,8 @@ app.post("/upload", upload.array("obrFiles"), async (req, res) => {
     jiraHost,
     jiraUsername,
     jiraPassword,
-    uninstallPluginsFlag,
     clientId,
+    uninstallablePlugins: rawUninstallablePlugins,
   } = req.body;
 
   const start = Date.now();
@@ -66,7 +66,6 @@ app.post("/upload", upload.array("obrFiles"), async (req, res) => {
     jiraHost,
     jiraUsername,
     jiraPassword,
-    uninstallPluginsFlag,
     files,
   });
 
@@ -88,14 +87,15 @@ app.post("/upload", upload.array("obrFiles"), async (req, res) => {
       : jiraHost;
 
   try {
-    // Uninstall plugins if flag is set
-    if (uninstallPluginsFlag === "true") {
+    const uninstallablePlugins = JSON.parse(rawUninstallablePlugins);
+    if (uninstallablePlugins.length > 0) {
       sendWsMessage(clientId, "Uninstalling plugins...", "info");
       const uninstallSuccess = await uninstallPlugins(
         parsedHostURL,
         jiraUsername,
         jiraPassword,
-        (message, info) => sendWsMessage(clientId, message, info)
+        (message, info) => sendWsMessage(clientId, message, info),
+        uninstallablePlugins
       );
       if (!uninstallSuccess) {
         sendWsMessage(
