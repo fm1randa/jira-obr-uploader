@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-const messagesDiv = document.getElementById("messages");
+const messagesSection = document.getElementById("messages");
 const uploadButton = document.querySelector('button[type="submit"]');
 
 const ws = new WebSocket(`ws://${new URL(window.location.href).host}`);
@@ -91,7 +91,7 @@ ws.onmessage = (event) => {
 
   const messageElement = document.createElement("div");
   messageElement.textContent = data.message;
-  messagesDiv.appendChild(messageElement);
+  messagesSection.appendChild(messageElement);
   messageElement.classList.add(data.status);
 
   const logLevel = document.getElementById("log-level").value;
@@ -260,3 +260,13 @@ document.addEventListener("DOMContentLoaded", function () {
   initializeDefaultPluginStates();
   loadPluginStates();
 });
+
+function clearMessages() {
+  messagesSection.querySelectorAll("div").forEach((message) => {
+    message.remove();
+  });
+}
+
+document
+  .getElementById("messages-clear")
+  .addEventListener("click", clearMessages);

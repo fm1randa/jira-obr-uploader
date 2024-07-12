@@ -12,7 +12,7 @@
   <header>
     <h1>Upload OBR Files to Jira</h1>
   </header>
-  <nav>
+  <main>
     <dialog>
       <button autofocus id="modal-close">X</button>
       <section aria-labelledby="default-plugins-heading">
@@ -68,8 +68,6 @@
         </div>
       </section>
     </dialog>
-  </nav>
-  <main>
     <form id="upload-form" enctype="multipart/form-data">
       <label for="jira-host">Jira Host:</label>
       <input type="url" id="jira-host" name="jiraHost" placeholder="http://localhost:2990/jira" pattern="http(s)?://.*"
@@ -89,14 +87,17 @@
       <br />
       <button type="submit" disabled id="form-upload">Upload</button>
     </form>
-    <label>
-      Log Level:
-      <select id="log-level">
-        <option value="normal">Normal</option>
-        <option value="debug">Debug</option>
-      </select>
-    </label>
-    <div id="messages"></div>
+    <section id="messages">
+      <h3>Messages</h3>
+      <label>
+        Log Level:
+        <select id="log-level">
+          <option value="normal">Normal</option>
+          <option value="debug">Debug</option>
+        </select>
+      </label>
+      <button id="messages-clear">Clear logs</button>
+    </section>
   </main>
   <script src="./index.js"></script>
 </body>
