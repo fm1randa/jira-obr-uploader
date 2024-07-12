@@ -9,6 +9,14 @@ export default [
       "no-undef": "error",
     },
   },
-  { languageOptions: { globals: { ...globals.browser, ...globals.node } } },
+  {
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+        BROWSER_PLUGIN_KEYS: "readonly",
+      },
+    },
+  },
   pluginJs.configs.recommended,
 ];
